@@ -1,0 +1,4 @@
+# GitHub OAuth 应用配置
+# 从 https://github.com/settings/developers 获取
+GITHUB_CLIENT_ID="your_github_client_id_here"
+GITHUB_CLIENT_SECRET="your_github_client_secret_here" 

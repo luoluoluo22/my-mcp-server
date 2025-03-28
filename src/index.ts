@@ -3,6 +3,23 @@ import { McpAgent } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import OAuthProvider from "@cloudflare/workers-oauth-provider";
+import { GitHubHandler } from "./github-handler";
+import {Octokit} from "octokit"
+
+
+// Context from the auth process, encrypted & stored in the auth token
+// and provided to the DurableMCP as this.props
+type Props = {
+	login: string;
+	name: string;
+	email: string;
+	accessToken: string;
+};
+
+const ALLOWED_USERNAMES = new Set([
+	// Add GitHub usernames of users who should have access to the image generation tool
+	// For example: 'yourusername', 'coworkerusername'
+]);
 
 export class MyMCP extends McpAgent {
 	server = new McpServer({
@@ -14,6 +31,26 @@ export class MyMCP extends McpAgent {
 		this.server.tool("add", { a: z.number(), b: z.number() }, async ({ a, b }) => ({
 			content: [{ type: "text", text: String(a + b) }],
 		}));
+		// Use the upstream access token to facilitate tools
+		this.server.tool(
+			"userInfoOctokit",
+			"Get user info from GitHub, via Octokit",
+			{},
+			async () => {
+				const octokit = new Octokit({ auth: this.props.accessToken });
+				const user = await octokit.rest.users.getAuthenticated();
+				return {
+					content: [
+						{
+							type: "text",
+							text: user.data.login||"Unknown",
+						},
+					],
+				};
+			},
+		);
+
+
 	}
 }
 
@@ -24,7 +61,7 @@ export default new OAuthProvider({
 	// @ts-ignore
 	apiHandler: MyMCP.mount("/sse"),
 	// @ts-ignore
-	defaultHandler: app,
+	defaultHandler: GitHubHandler,
 	authorizeEndpoint: "/authorize",
 	tokenEndpoint: "/token",
 	clientRegistrationEndpoint: "/register",

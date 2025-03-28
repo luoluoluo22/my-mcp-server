@@ -15,7 +15,8 @@
 		"marked": "^15.0.7",
 		"typescript": "^5.5.2",
 		"workers-mcp": "^0.1.0-3",
-		"wrangler": "^4.5.1"
+		"wrangler": "^4.5.1",
+		"octokit": "^4.1.2"
 	},
 	"dependencies": {
 		"@cloudflare/workers-oauth-provider": "^0.0.2",

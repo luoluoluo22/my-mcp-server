@@ -1,0 +1,23 @@
+name = "my-mcp-server"
+main = "src/index.ts"
+compatibility_date = "2025-03-10"
+
+[durable_objects]
+bindings = [
+  { name = "MCP_OBJECT", class_name = "MyMCP" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["MyMCP"]
+
+[[kv_namespaces]]
+binding = "OAUTH_KV"
+id = "6b023f9b8d34447182aeb52cc075ff9b"
+
+[observability]
+enabled = true
+
+[assets]
+directory = "./static/"
+binding = "ASSETS" 

@@ -16,7 +16,7 @@ npm install
 ```
 
 点击前往github[申请开发者OAuth Apps](https://github.com/settings/developers)，获得
-GITHUB_CLIENT_ID和GITHUB_CLIENT_SECRET，在.dev.vars文件中进行替换
+GITHUB_CLIENT_ID和GITHUB_CLIENT_SECRET，在.dev.vars文件中进行替换，替换完成后运行：
 ```bash
 npm run start
 ```
